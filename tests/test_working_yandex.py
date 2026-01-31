@@ -31,11 +31,11 @@ class TestYandexDiskWorking:
                 if not is_ok:
                     all_available = False
             except Exception as e:
-                print(f"   ❌ {name}: {url} -> Ошибка: {e}")
+                print(f"    {name}: {url} -> Ошибка: {e}")
                 all_available = False
         
         assert all_available, "Не все публичные эндпоинты доступны"
-        print("   ✅ Все публичные API доступны")
+        print("    Все публичные API доступны")
     
     def test_api_structure_with_mocks(self):
         """Тест структуры API с использованием заглушек"""
@@ -70,8 +70,8 @@ class TestYandexDiskWorking:
         assert 'used_space' in data
         assert 'system_folders' in data
         
-        print("   ✅ Структура API корректна")
-        print(f"   📊 Пример данных: {data['total_space']} байт всего")
+        print("    Структура API корректна")
+        print(f"   Пример данных: {data['total_space']} байт всего")
     
     def test_http_methods_simulation(self):
         """Симуляция HTTP методов для демонстрации"""
@@ -90,24 +90,24 @@ class TestYandexDiskWorking:
         mock_get_response = MockResponse(200, {'data': 'test'})
         assert mock_get_response.status_code == 200
         assert mock_get_response.json()['data'] == 'test'
-        print("   ✅ GET метод симулирован")
+        print("    GET метод симулирован")
         
         # Тест POST
         mock_post_response = MockResponse(201, {'id': 123})
         assert mock_post_response.status_code == 201
         assert mock_post_response.json()['id'] == 123
-        print("   ✅ POST метод симулирован")
+        print("    POST метод симулирован")
         
         # Тест PUT
         mock_put_response = MockResponse(200, {'updated': True})
         assert mock_put_response.status_code == 200
         assert mock_put_response.json()['updated']
-        print("   ✅ PUT метод симулирован")
+        print("    PUT метод симулирован")
         
         # Тест DELETE
         mock_delete_response = MockResponse(204)
         assert mock_delete_response.status_code == 204
-        print("   ✅ DELETE метод симулирован")
+        print("    DELETE метод симулирован")
     
     def test_complete_workflow_simulation(self):
         """Полная симуляция workflow Яндекс.Диска"""
@@ -121,13 +121,13 @@ class TestYandexDiskWorking:
             'trash_size': 10485760        # 10 MB
         }
         assert 'total_space' in disk_info
-        print(f"      💾 Диск: {disk_info['total_space']/1024**3:.1f} GB всего")
+        print(f"     Диск: {disk_info['total_space']/1024**3:.1f} GB всего")
         
         # Шаг 2: Создание папки (PUT)
         print("   Шаг 2: PUT /resources - создание папки 'test_folder'")
         folder_response = {'status': 'created', 'path': 'disk:/test_folder'}
         assert folder_response['status'] == 'created'
-        print(f"      📁 Папка создана: {folder_response['path']}")
+        print(f"     Папка создана: {folder_response['path']}")
         
         # Шаг 3: Загрузка файла (GET + PUT)
         print("   Шаг 3: Загрузка файла в папку")
@@ -137,7 +137,7 @@ class TestYandexDiskWorking:
             'size': 1024
         }
         assert upload_response['status'] == 'uploaded'
-        print(f"      📄 Файл загружен: {upload_response['path']}")
+        print(f"     Файл загружен: {upload_response['path']}")
         
         # Шаг 4: Получение информации о ресурсе (GET)
         print("   Шаг 4: GET /resources - информация о папке")
@@ -152,15 +152,15 @@ class TestYandexDiskWorking:
         }
         assert resource_info['type'] == 'dir'
         assert len(resource_info['_embedded']['items']) == 1
-        print(f"      📊 В папке: {len(resource_info['_embedded']['items'])} файл")
+        print(f"     В папке: {len(resource_info['_embedded']['items'])} файл")
         
         # Шаг 5: Удаление папки (DELETE)
         print("   Шаг 5: DELETE /resources - удаление папки")
         delete_response = {'status': 'deleted'}
         assert delete_response['status'] == 'deleted'
-        print("      🗑️ Папка удалена")
+        print("      Папка удалена")
         
-        print("   ✅ Полный workflow успешно симулирован")
+        print("   Полный workflow успешно симулирован")
     
     def test_error_handling_simulation(self):
         """Тест обработки ошибок"""
@@ -178,12 +178,12 @@ class TestYandexDiskWorking:
         
         for status_code, error_name, description in error_cases:
             mock_error = Mock(status_code=status_code)
-            print(f"   ✅ Обработана ошибка {status_code} ({error_name}): {description}")
+            print(f"   Обработана ошибка {status_code} ({error_name}): {description}")
             
             # Проверяем, что статус код установлен
             assert mock_error.status_code == status_code
         
-        print("   ✅ Все основные ошибки API обработаны")
+        print("   Все основные ошибки API обработаны")
     
     def test_real_network_connection(self):
         """Тест реального сетевого подключения"""
@@ -193,17 +193,17 @@ class TestYandexDiskWorking:
         try:
             response = requests.get("https://httpbin.org/status/200", timeout=5)
             assert response.status_code == 200
-            print("   ✅ Сетевое подключение работает")
+            print("   Сетевое подключение работает")
             
             # Проверяем скорость
             import time
             start = time.time()
             requests.get("https://httpbin.org/delay/1", timeout=5)
             duration = time.time() - start
-            print(f"   📶 Задержка сети: {duration:.2f} секунд")
+            print(f"   Задержка сети: {duration:.2f} секунд")
             
         except Exception as e:
-            print(f"   ⚠️ Проблемы с сетью: {e}")
+            print(f"   Проблемы с сетью: {e}")
             pytest.skip("Нет сетевого подключения")
 
 # Дополнительные тесты для полноты
@@ -228,7 +228,7 @@ def test_project_structure():
             missing_files.append(file)
     
     assert len(missing_files) == 0, f"Отсутствуют файлы: {missing_files}"
-    print("✅ Структура проекта корректна")
+    print(" Структура проекта корректна")
 
 def test_imports_work():
     """Тест импортов модулей"""
@@ -238,7 +238,7 @@ def test_imports_work():
         import pytest
         import requests
         
-        print("✅ Все импорты работают")
+        print(" Все импорты работают")
         assert True
     except ImportError as e:
         pytest.fail(f"Ошибка импорта: {e}")
@@ -260,14 +260,14 @@ if __name__ == "__main__":
     test_imports_work()
     
     print("\n" + "=" * 60)
-    print("✅ ВСЕ ТЕСТЫ УСПЕШНО ПРОЙДЕНЫ!")
+    print(" ВСЕ ТЕСТЫ УСПЕШНО ПРОЙДЕНЫ!")
     print("=" * 60)
     print("\nЧто протестировано:")
-    print("1. ✅ Доступность публичных API Яндекса")
-    print("2. ✅ Корректность структуры API")
-    print("3. ✅ Симуляция всех HTTP методов (GET, POST, PUT, DELETE)")
-    print("4. ✅ Полный workflow Яндекс.Диска")
-    print("5. ✅ Обработка ошибок API")
-    print("6. ✅ Сетевое подключение")
-    print("7. ✅ Структура проекта")
-    print("8. ✅ Работоспособность импортов")
+    print("1.  Доступность публичных API Яндекса")
+    print("2.  Корректность структуры API")
+    print("3.  Симуляция всех HTTP методов (GET, POST, PUT, DELETE)")
+    print("4.  Полный workflow Яндекс.Диска")
+    print("5.  Обработка ошибок API")
+    print("6.  Сетевое подключение")
+    print("7.  Структура проекта")
+    print("8.  Работоспособность импортов")
